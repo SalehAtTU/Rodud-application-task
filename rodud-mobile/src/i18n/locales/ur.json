@@ -1,0 +1,68 @@
+{
+    "welcome": "خوش آمدید",
+    "choose_language": "زبان منتخب کریں",
+    "email_or_phone": "ای میل یا فون",
+    "password": "پاس ورڈ",
+    "login": "لاگ ان",
+    "register": "رجسٹر کریں",
+    "dont_have_account": "اکاؤنٹ نہیں ہے؟",
+    "missing_fields": "مطلوبہ معلومات غائب ہیں",
+    "enter_both": "براہِ کرم ای میل/فون اور پاس ورڈ درج کریں۔",
+    "my_shipments": "میری شپمنٹس",
+    "new_shipment": "نئی شپمنٹ",
+    "admin_dashboard": "ایڈمن ڈیش بورڈ",
+    "profile": "پروفائل",
+    "contact_support": "سپورٹ سے رابطہ کریں",
+    "logout": "لاگ آؤٹ",
+  
+    "shipment": "شپمنٹ",
+    "order": "آرڈر",
+    "all_orders": "تمام آرڈرز",
+    "user": "صارف",
+    "date": "تاریخ",
+  
+    "pickup": "پک اپ",
+    "dropoff": "ڈراپ آف",
+    "pickup_location": "پک اپ مقام *",
+    "dropoff_location": "ڈراپ آف مقام *",
+    "search_pickup": "پک اپ مقام تلاش کریں",
+    "search_dropoff": "ڈراپ آف مقام تلاش کریں",
+    "open_in_maps": "نقشوں میں کھولیں",
+    "eta": "متوقع تاریخ",
+    "shipment_details": "شپمنٹ کی تفصیلات",
+    "status": "حالت",
+    "change_status": "حالت تبدیل کریں",
+  
+    "cargo_details": "کارگو کی تفصیلات",
+    "cargo_type": "کارگو کی قسم *",
+    "select_cargo_type": "کارگو کی قسم منتخب کریں",
+    "cargo_weight": "کارگو کا وزن *",
+    "select_cargo_weight": "کارگو کا وزن منتخب کریں",
+    "truck_types": "ٹرک کی اقسام *",
+    "create_order": "آرڈر تخلیق کریں",
+  
+    "type": "قسم",
+    "weight": "وزن",
+    "truck": "ٹرک",
+  
+    "timeline": "ٹائم لائن",
+    "picked_up": "اٹھا لیا گیا",
+    "delivered": "پہنچایا گیا",
+  
+    "pending": "زیر التوا",
+    "in_progress": "عمل میں",
+    
+    "view_details": "تفصیلات دیکھیں",
+    "view_update": "دیکھیں / تبدیل کریں",
+    "save": "محفوظ کریں",
+  
+    "active": "فعال",
+    "completed": "مکمل",
+    "no_shipments": "کوئی {{status}} شپمنٹس نہیں۔",
+    "no_orders": "اس حیثیت میں کوئی آرڈرز نہیں۔",
+  
+    "error": "خرابی",
+    "could_not_load_shipments": "شپمنٹس لوڈ نہیں ہو سکیں۔ دوبارہ کوشش کریں۔",
+    "could_not_create_order": "آرڈر تخلیق نہیں ہو سکا۔ دوبارہ کوشش کریں۔"
+  }
+  
