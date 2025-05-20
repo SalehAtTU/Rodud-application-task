@@ -12,7 +12,7 @@ import RegisterScreen         from '../screens/RegisterScreen';
 import MyShipmentsScreen      from '../screens/MyShipmentsScreen';
 import NewShipmentScreen      from '../screens/NewShipmentScreen';
 import ShipmentDetailsScreen  from '../screens/ShipmentDetailsScreen';
-import MapPickerScreen        from '../screens/MapPickerScreen';
+import MapPickerScreen from '../screens/MapPickerScreen';
 import ProfileScreen          from '../screens/ProfileScreen';
 import ContactSupportScreen   from '../screens/ContactSupportScreen';
 

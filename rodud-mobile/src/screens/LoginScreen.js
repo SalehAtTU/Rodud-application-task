@@ -1,5 +1,4 @@
 // src/screens/LoginScreen.js
-
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -13,10 +12,12 @@ import {
   Animated,
   ActivityIndicator,
   Alert,
+  Platform,
+  useWindowDimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../api/axios'; // your axios instance
+import api from '../api/axios';
 
 export default function LoginScreen({ navigation }) {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -42,22 +43,14 @@ export default function LoginScreen({ navigation }) {
     }
     setLoading(true);
     try {
-      // Note: backend expects "email_or_phone"
       const res = await api.post('/login', {
         email_or_phone: emailOrPhone,
         password,
       });
       const { token, user } = res.data;
-
-      // Persist for AppNavigator ➔ AppDrawer
       await AsyncStorage.setItem('userToken', token);
       await AsyncStorage.setItem('userData', JSON.stringify(user));
-
-      // Reset into your main app stack
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'App' }],
-      });
+      navigation.reset({ index: 0, routes: [{ name: 'App' }] });
     } catch (err) {
       console.error(err.response?.data || err);
       const msg = err.response?.data?.message ||
@@ -68,8 +61,12 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
+  // Desktop/web detection
+  const { width, height } = useWindowDimensions();
+  const isWeb = Platform.OS === 'web';
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isWeb && styles.containerWeb]}>
       <StatusBar barStyle="dark-content" />
 
       {/* Background bubbles */}
@@ -80,11 +77,17 @@ export default function LoginScreen({ navigation }) {
       </View>
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isWeb && styles.scrollContentWeb,
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* Logo + titles */}
-        <View style={styles.logoContainer}>
+        <View style={[
+          styles.logoContainer,
+          isWeb && styles.logoContainerWeb
+        ]}>
           <View style={styles.logoBox}>
             <Image
               source={require('../../assets/rodud logo.png')}
@@ -101,6 +104,7 @@ export default function LoginScreen({ navigation }) {
           style={[
             styles.loginCard,
             { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
+            isWeb && styles.loginCardWeb,
           ]}
         >
           <Text style={styles.loginTitle}>Sign In</Text>
@@ -133,13 +137,17 @@ export default function LoginScreen({ navigation }) {
               style={styles.eyeIcon}
               onPress={() => setShowPassword(v => !v)}
             >
-              <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={18} color="#9b87f5" />
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={18}
+                color="#9b87f5"
+              />
             </TouchableOpacity>
           </View>
 
           {/* Sign In button */}
           <TouchableOpacity
-            style={styles.loginButton}
+            style={[styles.loginButton, isWeb && styles.loginButtonWeb]}
             onPress={handleLogin}
             disabled={loading}
           >
@@ -163,7 +171,7 @@ export default function LoginScreen({ navigation }) {
         </Animated.View>
 
         {/* Footer */}
-        <View style={styles.footer}>
+        <View style={[styles.footer, isWeb && styles.footerWeb]}>
           <Text style={styles.footerText}>
             © {new Date().getFullYear()} Rodud Logistics
           </Text>
@@ -174,48 +182,205 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F1F0FB' },
-  backgroundEffects: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
-  gradientBubble: { position: 'absolute', borderRadius: 300 },
-  bubble1: { top: -50, left: -100, width: 300, height: 300, backgroundColor: '#E5DEFF', opacity: 0.5 },
-  bubble2: { top: 200, right: -150, width: 350, height: 350, backgroundColor: '#F1F0FB', opacity: 0.7 },
-  bubble3: { bottom: -100, left: -50, width: 250, height: 250, backgroundColor: '#E5DEFF', opacity: 0.6 },
-  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 30 },
-  logoContainer: { alignItems: 'center', marginTop: 60, marginBottom: 40 },
+  container: {
+    flex: 1,
+    backgroundColor: '#F1F0FB',
+  },
+  containerWeb: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  backgroundEffects: {
+    ...StyleSheet.absoluteFillObject,
+    overflow: 'hidden',
+  },
+  gradientBubble: {
+    position: 'absolute',
+    borderRadius: 300,
+  },
+  bubble1: {
+    top: -50,
+    left: -100,
+    width: 300,
+    height: 300,
+    backgroundColor: '#E5DEFF',
+    opacity: 0.5,
+  },
+  bubble2: {
+    top: 200,
+    right: -150,
+    width: 350,
+    height: 350,
+    backgroundColor: '#F1F0FB',
+    opacity: 0.7,
+  },
+  bubble3: {
+    bottom: -100,
+    left: -50,
+    width: 250,
+    height: 250,
+    backgroundColor: '#E5DEFF',
+    opacity: 0.6,
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 24,
+    paddingBottom: 30,
+  },
+  scrollContentWeb: {
+    width: '100%',
+    maxWidth: 400,
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 60,
+    marginBottom: 40,
+  },
+  logoContainerWeb: {
+    marginTop: 0,
+    marginBottom: 50,
+  },
   logoBox: {
-    width: 90, height: 50, backgroundColor: 'white', borderRadius: 8,
-    justifyContent: 'center', alignItems: 'center', marginBottom: 15,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1, shadowRadius: 3, elevation: 2,
+    width: 90,
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
-  logo: { width: 70, height: 35 },
-  appTitle: { fontSize: 20, fontWeight: '700', color: '#333', marginBottom: 5 },
-  appSubtitle: { fontSize: 13, color: '#777' },
+  logo: {
+    width: 70,
+    height: 35,
+  },
+  appTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 5,
+  },
+  appSubtitle: {
+    fontSize: 13,
+    color: '#777',
+  },
+
   loginCard: {
-    backgroundColor: 'white', borderRadius: 16, padding: 24, marginHorizontal: 5,
-    shadowColor: '#9b87f5', shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1, shadowRadius: 12, elevation: 4,
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 24,
+    marginHorizontal: 5,
+    shadowColor: '#9b87f5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 4,
+    width: '100%',
   },
-  loginTitle: { fontSize: 20, fontWeight: '600', color: '#333', marginBottom: 24, textAlign: 'center' },
+  loginCardWeb: {
+    maxWidth: 360,
+    marginHorizontal: 0,
+    width: '100%',
+  },
+
+  loginTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+
   inputContainer: {
-    flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#F7F7FC', borderRadius: 12, marginBottom: 16,
-    height: 52, borderWidth: 1, borderColor: '#EAE7F9',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F7F7FC',
+    borderRadius: 12,
+    marginBottom: 16,
+    height: 52,
+    borderWidth: 1,
+    borderColor: '#EAE7F9',
   },
-  inputIcon: { paddingLeft: 16 },
-  input: { flex: 1, paddingVertical: 12, paddingLeft: 12, color: '#333', fontSize: 15 },
-  eyeIcon: { paddingRight: 16 },
+  inputIcon: {
+    paddingLeft: 16,
+  },
+  input: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingLeft: 12,
+    color: '#333',
+    fontSize: 15,
+  },
+  eyeIcon: {
+    paddingRight: 16,
+  },
+
   loginButton: {
-    backgroundColor: '#9b87f5', borderRadius: 12, height: 52,
-    justifyContent: 'center', alignItems: 'center', marginTop: 8, marginBottom: 20,
-    shadowColor: '#9b87f5', shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2, shadowRadius: 8, elevation: 3,
+    backgroundColor: '#9b87f5',
+    borderRadius: 12,
+    height: 52,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+    shadowColor: '#9b87f5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  buttonContent: { flexDirection: 'row', alignItems: 'center' },
-  buttonText: { color: 'white', fontSize: 16, fontWeight: '600', marginLeft: 8 },
-  switchRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 8 },
-  switchText: { fontSize: 14, color: '#777' },
-  switchLink: { fontSize: 14, color: '#9b87f5', fontWeight: '600' },
-  footer: { marginVertical: 16, alignItems: 'center' },
-  footerText: { color: '#999', fontSize: 12 },
+  loginButtonWeb: {
+    width: '100%',
+    paddingVertical: 16,
+  },
+
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  switchText: {
+    fontSize: 14,
+    color: '#777',
+  },
+  switchLink: {
+    fontSize: 14,
+    color: '#9b87f5',
+    fontWeight: '600',
+  },
+
+  footer: {
+    marginVertical: 16,
+    alignItems: 'center',
+  },
+  footerWeb: {
+    marginVertical: 30,
+  },
+  footerText: {
+    color: '#999',
+    fontSize: 12,
+  },
 });
